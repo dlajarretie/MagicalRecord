@@ -330,6 +330,25 @@
     return controller;
 }
 
++ (NSFetchedResultsController *) MR_fetchAllGroupedBy:(NSString *)group withPredicate:(NSPredicate *)searchTerm sortedBy:(NSString *)sortTerm ascending:(BOOL)ascending delegate:(id<NSFetchedResultsControllerDelegate>)delegate inContext:(NSManagedObjectContext *)context includePendingChanges:(BOOL)includePending
+{
+	NSFetchRequest *request = [self MR_requestAllSortedBy:sortTerm
+                                                ascending:ascending
+                                            withPredicate:searchTerm
+                                                inContext:context];
+    
+    [request setIncludesPendingChanges:includePending];
+    
+    NSFetchedResultsController *controller = [self MR_fetchController:request
+                                                             delegate:delegate
+                                                         useFileCache:NO
+                                                            groupedBy:group
+                                                            inContext:context];
+    
+    [self MR_performFetch:controller];
+    return controller;
+}
+
 + (NSFetchedResultsController *) MR_fetchAllGroupedBy:(NSString *)group withPredicate:(NSPredicate *)searchTerm sortedBy:(NSString *)sortTerm ascending:(BOOL)ascending delegate:(id)delegate
 {
 #pragma clang diagnostic push
